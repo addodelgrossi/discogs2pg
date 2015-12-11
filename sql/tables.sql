@@ -33,12 +33,13 @@ CREATE TABLE release (
     status text,
     title text,
     country text,
+    barcode text,    
     released text,
     notes text,
     genres text[],
     styles text[],
     master_id int,
-    data_quality text
+    data_quality text    
 );
 
 CREATE TABLE release_artist (

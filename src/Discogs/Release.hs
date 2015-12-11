@@ -25,6 +25,7 @@ data Release = Release
   , _releaseStatus :: ByteString
   , _releaseTitle :: ByteString
   , _releaseCountry :: ByteString
+  , _releaseBarcode :: ByteString  
   , _releaseDate :: ByteString
   , _releaseQuality :: ByteString
   , _releaseNotes :: ByteString
@@ -95,7 +96,7 @@ releaseStore x = Store
   , getName="releases"
   , getTables = [
       TableInfo "release" ["id", "master_id", "status",
-                           "title", "country", "released", "data_quality",
+                           "title", "country", "barcode", "released", "data_quality",
                            "notes", "genres", "styles"]
     , TableInfo "release_artist" ["release_id", "artist_id",
                                   "anv", "join_relation", "role"]
@@ -124,9 +125,9 @@ releaseStore x = Store
 instance Table Release where
     avoid = const Nothing
 
-    toRows (Release i m s t c d q n as es ls fs ts is vs cs gs ss) = [
+    toRows (Release i m s t c b d q n as es ls fs ts is vs cs gs ss) = [
           escapeRow [escape i, escape m, escape s, escape t,
-                     escape c, escape d, escape q, escape n,
+                     escape c, escape b, escape d, escape q, escape n,
                      escapeList gs, escapeList ss]
         , innerTable mkArtist as
         , innerTable mkArtist es
@@ -172,6 +173,7 @@ emptyRelease = Release
   , _releaseStatus=""
   , _releaseTitle=""
   , _releaseCountry=""
+  , _releaseBarcode=""  
   , _releaseDate=""
   , _releaseQuality=""
   , _releaseNotes=""
@@ -203,6 +205,7 @@ parseRelease' :: UNode ByteString -> Release -> Release
 parseRelease' (Element "title" [] txt) = releaseTitle .~ getTexts txt
 parseRelease' (Element "master_id" [] txt) = releaseMasterId .~ getTexts txt
 parseRelease' (Element "country" [] txt) = releaseCountry .~ getTexts txt
+parseRelease' (Element "barcode" [] txt) = releaseBarcode .~ getTexts txt
 parseRelease' (Element "released" [] txt) = releaseDate .~ getTexts txt
 parseRelease' (Element "notes" [] txt) = releaseNotes .~ getTexts txt
 parseRelease' (Element "data_quality" [] txt) = releaseQuality .~ getTexts txt
